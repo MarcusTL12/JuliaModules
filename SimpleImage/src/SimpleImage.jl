@@ -25,10 +25,8 @@ end
 
 function load_png_bytes(filepath::String)::Array{UInt8, 3}
 	imgptr = ccall((:loadPng, "simplepng"), Ptr{UInt8}, (Cstring,), filepath)
-	
-	w, h = unsafe_wrap(Array{UInt32, 1}, imgptr, (2,))
-
-	img = unsafe_wrap(Array{UInt8, 2}, imgptr + 8, (h, w, 4))
+	w, h = unsafe_wrap(Array{UInt32, 1}, Ptr{UInt32}(imgptr), (2,))
+	img = unsafe_wrap(Array{UInt8, 3}, imgptr + 8, (UInt32(4), w, h))
 
 	finalizer(free_img, img)
 
@@ -36,7 +34,7 @@ function load_png_bytes(filepath::String)::Array{UInt8, 3}
 end
 
 function write_png(filepath::String, img::Array{UInt8, 3})
-	h, w, c = size(img)
+	c, h, w = size(img)
 	ccall((:writePng, "simplepng"), Cvoid, (Cstring, Ptr{Int8}, Int32, Int32), filepath, pointer(img), w, h)
 end
 
