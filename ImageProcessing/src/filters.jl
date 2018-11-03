@@ -28,16 +28,3 @@ function simple_gaussian!(img::ImgFlt)
 	img ./= sum(kernel)
 end
 
-
-function simple_gaussian_larger!(img::ImgFlt)
-	kernel = Float32[
-		1 2 3 2 1;
-		2 3 4 3 2;
-		3 4 5 4 3;
-		2 3 4 3 2;
-		1 2 3 2 1
-	]
-	apply_kernel!(img, kernel)
-	img ./= sum(kernel)
-end
-
