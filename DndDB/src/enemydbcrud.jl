@@ -1,25 +1,14 @@
 # enemydbcrud.jl (v0.1)
 
-
-
-Enemy = Union{Dict{String, Any}, Dict{String, Int64}};
+Enemy = Dict{String, Any};
 
 #create, update, read, destroy
-
 #= 
 	create: insert!()
 	read: findenemy() && getenemyposition()
 	update: updateenemy()
 	destroy: destroyenemy()
 =#
-
-function setpath(newpath::String)
-
-	if path != newpath
-		path = newpath;
-	end
-	
-end
 
 function createenemy()
 	d = Enemy();
