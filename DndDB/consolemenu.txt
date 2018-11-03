@@ -1,0 +1,10 @@
+Welcome to the Enemy Creator v0.1
+
+Here you can create, read, update and destroy enemies
+
+Input a number to perform an action:
+1. New Enemy
+2. Search for enemy
+3. Alter enemy
+4. Delete enemy
+-1. Exit

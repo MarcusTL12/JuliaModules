@@ -1,0 +1,36 @@
+searchforenemy() must force selection of an enemy or selection of null
+searchforenemy() takes key::String and value::Any
+
+altercurrentenemy() returns if selection is null and notifies of search
+altercurrentenemy() takes nothing
+
+deletecurrentenemy() returns if selection is null and notifies of search
+deletecurrentenemy() must ask to confirm before taking action
+deletecurrentenemy() takes nothing
+
+newenemy() creates new enemy with all fields prompted
+
+setpath(path::String) sets path to args[1]
+getpath() prints current directory
+listfiles(path::String = currentpath) lists all files on given path, default: currentpath
+
+
+searchforenemy()
+newenemy()
+altercurrentenemy()
+deletecurrentenemy()
+setpath()
+getpath()
+listfiles()
+currentpath::String
+
+One enemy per .json vs. more enemies per .json
+
+One enemy per .json &&
+currentenemy::String = "path\\to\\enemy.json";
+OR
+Enemy (struct) has unique_id &&
+currentenemy::Int64 = unique_id;
+OR
+Each struct in .json has internal_id &&
+currentenemy = ["path\\to\\enemies.json", internal_id];
