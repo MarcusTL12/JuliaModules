@@ -9,7 +9,7 @@ function readfile(fname)::Array{Any, 1}
 end
 
 function writefile(fname, content)
-	cp(fname, fname * ".backup");
+	cp(fname, fname * ".backup"; force = true);
 	
 	try 
 		rm(fname);
