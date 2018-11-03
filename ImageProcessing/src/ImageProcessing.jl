@@ -51,4 +51,7 @@ loadImg(filepath::String)::ImgArr = SimpleImage.load_png_bytes(filepath)
 writeImg(filepath::String, img::ImgArr) = SimpleImage.write_png(filepath, img)
 
 
+include("kernel.jl")
+
+
 end

@@ -34,7 +34,7 @@ function load_png_bytes(filepath::String)::Array{UInt8, 3}
 end
 
 function write_png(filepath::String, img::Array{UInt8, 3})
-	c, h, w = size(img)
+	c, w, h = size(img)
 	ccall((:writePng, "simplepng"), Cvoid, (Cstring, Ptr{Int8}, Int32, Int32), filepath, pointer(img), w, h)
 end
 
