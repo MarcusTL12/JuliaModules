@@ -1,14 +1,14 @@
 
 
-function toRGBFloat(img::ImgArr)::Array{Float32, 3}
+function toRGBFloat(img::ImgArr)::ImgFlt
 	c, w, h = size(img)
-	ret = Array{Float32, 3}(undef, (3, w, h))
+	ret = ImgFlt(undef, (3, w, h))
 	ret .= (Float32.(img[1:3, :, :]) ./ 255)
 	return ret
 end
 
 
-function toARGBBytes(img::Array{Float32, 3})::ImgArr
+function toARGBBytes(img::ImgFlt)::ImgArr
 	c, w, h = size(img)
 	ret = ImgArr(undef, (4, w, h))
 	ret[4, :, :] .= 0xff
@@ -17,7 +17,7 @@ function toARGBBytes(img::Array{Float32, 3})::ImgArr
 end
 
 
-loadFloatImg(filepath::String)::Array{Float32, 3} = toRGBFloat(loadImg(filepath))
+loadFloatImg(filepath::String)::ImgFlt = toRGBFloat(loadImg(filepath))
 
-writeImg(filepath::String, img::Array{Float32, 3}) = writeImg(filepath, toARGBBytes(img))
+writeImg(filepath::String, img::ImgFlt) = writeImg(filepath, toARGBBytes(img))
 

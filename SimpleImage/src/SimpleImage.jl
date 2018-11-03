@@ -15,7 +15,6 @@ function load_png(filepath::String)::Array{UInt32, 2}
 end
 
 function free_img(img::Union{Array{UInt32}, Array{UInt8}})
-	println("Freed")
 	ccall((:freeImg, "simplepng"), Cvoid, (Ptr{UInt8},), pointer(img) - 8)
 end
 

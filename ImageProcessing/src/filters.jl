@@ -8,3 +8,13 @@ function grayscale!(img::ImgArr)
 	end
 end
 
+
+function grayscale!(img::ImgFlt)
+	c, w, h = size(img)
+	for i in CartesianIndices((1 : w, 1 : h))
+		x, y = Tuple(i)
+		img[:, x, y] .= sqrt(sum(img[:, x, y].^2) / 3)
+	end
+end
+
+

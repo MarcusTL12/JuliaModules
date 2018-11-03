@@ -8,6 +8,7 @@ import SimpleImage
 ColTup = Tuple{UInt8, UInt8, UInt8, UInt8}
 ImgInt = Array{UInt32, 2}
 ImgArr = Array{UInt8, 3}
+ImgFlt = Array{Float32, 3}
 
 
 loadImgABGR(filepath::String)::ImgInt = SimpleImage.load_png(filepath)
