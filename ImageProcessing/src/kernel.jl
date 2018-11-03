@@ -17,7 +17,9 @@ function apply_kernel!(img::ImgArr, kernel::Array{Int, 2})
 			acc .+= img[1:3, kx, ky] * curker
 		end
 		map!(acc -> fld.(acc, kersum), acc, acc)
-		cpyImg[:, x, y] .= abs.(acc)
+		if kersum > 0
+			cpyImg[:, x, y] .= abs.(acc)
+		end
 	end
 	img[1:3, :, :] .= cpyImg
 end

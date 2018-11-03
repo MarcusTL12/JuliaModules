@@ -54,4 +54,7 @@ writeImg(filepath::String, img::ImgArr) = SimpleImage.write_png(filepath, img)
 include("kernel.jl")
 
 
+include("filters.jl")
+
+
 end
