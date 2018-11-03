@@ -1,6 +1,6 @@
 # enemydbcrud.jl (v0.1)
 
-include("consoleutil.jl");
+
 
 Enemy = Union{Dict{String, Any}, Dict{String, Int64}};
 

@@ -1,7 +1,6 @@
 # main.jl (v0.1)
 
-include("enemydbcrud.jl");
-include("filehandling.jl");
+import DndDB
 
 function main()
 
