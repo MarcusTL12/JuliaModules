@@ -18,3 +18,13 @@ function grayscale!(img::ImgFlt)
 end
 
 
+function simple_gaussian!(img::ImgFlt)
+	kernel = Float32[
+		1 2 1;
+		2 3 2;
+		1 2 1
+	]
+	apply_kernel!(img, kernel)
+	img ./= sum(kernel)
+end
+
