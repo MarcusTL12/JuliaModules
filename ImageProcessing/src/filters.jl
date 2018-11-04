@@ -65,3 +65,27 @@ function sobell!(img::ImgFlt)
 	img .= sqrt.(imga.^2 + imgb.^2) ./ (4 * sqrt(2))
 end
 
+
+function sobell_large!(img::ImgFlt)
+	kernelh = Float32[
+		1 2 0 -2 -1;
+		2 3 0 -3 -2;
+		3 4 0 -4 -3;
+		2 3 0 -3 -2;
+		1 2 0 -2 -1
+	]
+	kernelv = Float32[
+		1	2	3	2	1;
+		2	3	4	3	2;
+		0	0	0	0	0;
+		-2	-3	-4	-3	-2;
+		-1	-2	-3	-2	-1
+	]
+	grayscale!(img)
+	imga = copy(img)
+	imgb = copy(img)
+	apply_kernel!(imga, kernelh)
+	apply_kernel!(imgb, kernelv)
+	img .= sqrt.(imga.^2 + imgb.^2) ./ (23 * sqrt(2))
+end
+
