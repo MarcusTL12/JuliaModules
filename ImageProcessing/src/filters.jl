@@ -45,3 +45,23 @@ function gaussian!(img::ImgFlt, r::Int, stdev::Number)
 	apply_kernel!(img, gaussian_kernel(r, stdev))
 end
 
+
+function sobell!(img::ImgFlt)
+	kernelh = Float32[
+		1 0 -1;
+		2 0 -2;
+		1 0 -1
+	]
+	kernelv = Float32[
+		1	2	1;
+		0	0	0;
+		-1	-2	-1
+	]
+	grayscale!(img)
+	imga = copy(img)
+	imgb = copy(img)
+	apply_kernel!(imga, kernelh)
+	apply_kernel!(imgb, kernelv)
+	img .= sqrt.(imga.^2 + imgb.^2) ./ (4 * sqrt(2))
+end
+
