@@ -34,6 +34,9 @@ function apply_kernel!(img::ImgFlt, kernel::Array{Float32, 2})
 	acc::Array{Float32, 1} = Float32[0, 0, 0]
 	kerInd = (- x_off : x_off, - y_off : y_off)
 	for x in 1 : w
+		if x % 100 == 0
+			println(x)
+		end
 		for y in 1 : h
 			acc .= 0
 			for kx in kerInd[1]
