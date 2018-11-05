@@ -57,7 +57,7 @@ function sobell!(img::ImgFlt)
 		0	0	0;
 		-1	-2	-1
 	]
-	grayscale!(img)
+	# grayscale!(img)
 	imga = copy(img)
 	imgb = copy(img)
 	apply_kernel!(imga, kernelh)
