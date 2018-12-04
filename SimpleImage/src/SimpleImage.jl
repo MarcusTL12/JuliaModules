@@ -38,4 +38,14 @@ function write_png(filepath::String, img::Array{UInt8, 3})
 	ccall((:writePng, "simplepng"), Cvoid, (Cstring, Ptr{Int8}, Int32, Int32), filepath, pointer(img), w, h)
 end
 
+load_png_rgb(filepath::String)::Array{UInt8, 3} = load_png_bytes(filepath)[1:3, :, :]
+
+function write_png_rgb(filepath::String, img::Array{UInt8, 3})
+	c, w, h = size(img)
+	a::Array{UInt8, 3} = Array{UInt8, 3}(undef, 4, w, h)
+	a[4, :, :] .= 0xff
+	a[1:3, :, :] .= img
+	write_png(filepath, a)
+end
+
 end
