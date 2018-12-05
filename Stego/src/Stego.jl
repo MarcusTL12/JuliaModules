@@ -5,12 +5,10 @@ module Stego
 
 using BitStreamLib
 
-str_dat(s::String)::Array{UInt8, 1} = unsafe_wrap(Array{UInt8, 1}, pointer(s), length(s))
-
-lsb(img::Array{UInt8, 3}, data::String) = lsb(img, str_dat(data))
-
-function lsb(img::Array{UInt8, 3}, data::Vector{UInt8})
+function lsb(img::Array{UInt8, 3}, data)
 	data_bits::BitStream = BitStream(data)
+
+	length_bits::BitStream = BitStream(length(data_bits))
 
 	img .&= 0xfe
 

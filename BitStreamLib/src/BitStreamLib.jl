@@ -1,4 +1,4 @@
-__precompile__()
+__precompile__(true)
 
 
 module BitStreamLib
@@ -10,6 +10,7 @@ import Base.getindex
 import Base.setindex!
 import Base.string
 import Base.show
+import Base.iterate
 
 export BitStream
 export push!
@@ -20,17 +21,21 @@ export setindex!
 export length
 export string
 export show
+export iterate
 
-
+Integers = Union{UInt8, UInt16, UInt32, UInt64, UInt128, Int8, Int16, Int32, Int64, Int128}
 
 struct BitStream
 	data::Array{UInt8, 1}
 	indices::Array{Int, 1}
 	BitStream() = new(zeros(UInt8, 16), [1, 1])
-	BitStream(prealloc::Int) = new(zeros(UInt8, prealloc), [1, 1])
 	BitStream(data::Array{UInt8, 1}, len::Int) = new(data, [fld(len, 8) + 1, (len) % 8 + 1])
 	BitStream(data::Array{UInt8, 1}) = BitStream(data, length(data) * 8)
-	BitStream(data::String) = BitStream([UInt8(i) for i in data])
+	BitStream(data::String) = BitStream(Array{UInt8, 1}(data))
+	BitStream(data::Integers) = BitStream([UInt8((data >> ((i - 1) * 8)) & 0xff) for i in 1 : sizeof(data)])
+	BitStream(data::Float64) = BitStream(reinterpret(Int64, data))
+	BitStream(data::Float32) = BitStream(reinterpret(Int32, data))
+	BitStream(data::Float16) = BitStream(reinterpret(Int16, data))
 end
 
 
@@ -48,7 +53,10 @@ function push!(strm::BitStream, data::Bool)
 end
 
 
-getindex(A::BitStream, i1::Int)::Bool = get(A, i1)
+getindex(strm::BitStream, index::Int)::Bool = get(strm, index)
+
+
+getindex(strm::BitStream, range::UnitRange{Int64}) = [strm[i] for i in range]
 
 
 function get(strm::BitStream, index::Int)::Bool
@@ -57,6 +65,14 @@ end
 
 
 setindex!(A::BitStream, val::Bool, i1::Int) = set(A, i1, val)
+
+function setindex!(strm::BitStream, vals::Array{Bool,1}, range::UnitRange{Int64})
+	i = 1
+	for j in range
+		strm[j] = vals[i]
+		i += 1
+	end
+end
 
 
 function set(strm::BitStream, index::Int, val::Bool)
@@ -81,6 +97,15 @@ end
 
 function show(io::IO, strm::BitStream)
 	print(io, string(strm))
+end
+
+
+function iterate(iter::BitStream, state=1)
+	if state > length(iter)
+		return nothing
+	end
+
+	return (iter[state], state + 1)
 end
 
 
