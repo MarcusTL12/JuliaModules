@@ -58,7 +58,7 @@ function treeifyRec(s::String)
 	while op < length(ops) && !found
 		op += 1
 		par_count::Int = 0
-		for i in length(s) : -1 : 1
+		for i in (op == 5 ? (1 : length(s)) : (length(s) : -1 : 1))
 			if s[i] == ')'
 				par_count += 1
 			elseif s[i] == '('
