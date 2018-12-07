@@ -39,7 +39,7 @@ function mparse(s::String)
 	return s
 end
 
-ops = [(+, '+'), (-, '-'), (*, '*'), (/, '/')]
+ops = [(+, '+'), (-, '-'), (*, '*'), (/, '/'), (^, '^')]
 
 mutable struct Mathobj
 	op::Int
@@ -55,7 +55,7 @@ function treeifyRec(s::String)
 	found = false
 	op = 0
 	split_ind = -1
-	while op < 4 && !found
+	while op < length(ops) && !found
 		op += 1
 		par_count::Int = 0
 		for i in length(s) : -1 : 1
@@ -71,7 +71,7 @@ function treeifyRec(s::String)
 		end
 	end
 
-	if op > 4 || split_ind == -1
+	if op > length(ops) || split_ind == -1
 		if s[1] == '('
 			return treeifyRec(s[2 : end - 1])
 		else
