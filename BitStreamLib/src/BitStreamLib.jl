@@ -22,8 +22,9 @@ export length
 export string
 export show
 export iterate
+export data
+export getvalue
 
-Integers = Union{UInt8, UInt16, UInt32, UInt64, UInt128, Int8, Int16, Int32, Int64, Int128}
 
 struct BitStream
 	data::Array{UInt8, 1}
@@ -32,10 +33,7 @@ struct BitStream
 	BitStream(data::Array{UInt8, 1}, len::Int) = new(data, [fld(len, 8) + 1, (len) % 8 + 1])
 	BitStream(data::Array{UInt8, 1}) = BitStream(data, length(data) * 8)
 	BitStream(data::String) = BitStream(Array{UInt8, 1}(data))
-	BitStream(data::Integers) = BitStream([UInt8((data >> ((i - 1) * 8)) & 0xff) for i in 1 : sizeof(data)])
-	BitStream(data::Float64) = BitStream(reinterpret(Int64, data))
-	BitStream(data::Float32) = BitStream(reinterpret(Int32, data))
-	BitStream(data::Float16) = BitStream(reinterpret(Int16, data))
+	BitStream(data::Union{Signed, Unsigned, AbstractFloat}) = BitStream(Array{UInt8, 1}(reinterpret(UInt8, [data])))
 end
 
 
@@ -83,6 +81,20 @@ end
 
 function length(strm::BitStream)::Int
 	return (strm.indices[1] - 1) * 8 + strm.indices[2] - 1
+end
+
+
+function data(strm::BitStream)::Array{UInt8, 1}
+	return strm.data[1:cld(length(strm), 8)]
+end
+
+
+function getvalue(T::DataType, strm::BitStream)
+	if T <: Union{Signed, Unsigned, AbstractFloat}
+		return reinterpret(T, data(strm))[1]
+	elseif T <: AbstractString
+		return String(data(strm))
+	end
 end
 
 
