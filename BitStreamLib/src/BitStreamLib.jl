@@ -24,6 +24,9 @@ export show
 export iterate
 export data
 export getvalue
+export parity
+export truecount
+export falsecount
 
 
 struct BitStream
@@ -120,5 +123,11 @@ function iterate(iter::BitStream, state=1)
 	return (iter[state], state + 1)
 end
 
+
+parity(strm::BitStream)::Bool = reduce(⊻, strm)
+
+truecount(strm::BitStream)::Int = mapreduce(x -> x ? 1 : 0, +, strm)
+
+falsecount(strm::BitStream)::Int = mapreduce(x -> x ? 0 : 1, +, strm)
 
 end
