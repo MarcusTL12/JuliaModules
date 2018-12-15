@@ -99,6 +99,7 @@ function insert!(lookup::Array{String, 1}, table::Enemyarray, e::Enemy)
 end
 
 # Marked with ! because it returns a pointer to the array-element
+# DEPRECATED
 function findenemies!(f::Function, arr::Enemyarray)
 
 	inds = findall(f, arr);
