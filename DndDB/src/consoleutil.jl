@@ -1,5 +1,7 @@
 # consoleutil.jl (v0.1)
 
+export cin
+
 function putmenu()
 
     f = open("consolemenu.txt");

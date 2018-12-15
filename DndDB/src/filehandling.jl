@@ -2,6 +2,9 @@
 
 import JSON
 
+export readfile
+export writefile
+
 function readfile(fname)::Array{Any, 1}
 	open(fname, "r") do f
 		return JSON.parse(read(f, String));

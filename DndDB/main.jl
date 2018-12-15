@@ -1,6 +1,6 @@
 # main.jl (v0.1)
 
-import DndDB
+using DndDB
 
 function main()
 

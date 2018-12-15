@@ -1,13 +1,55 @@
-# enemydbcrud.jl (v0.1)
+# enemydbcrud.jl (v0.2)
+
+import Base.println
+
+export createenemy
+export insert!
+export update!
+
+export findenemies!
+export findall
+export findfirst
+export findnext
+
+export deleteall!
+export deletefirst!
+export deletenext!
+
+export println
 
 Enemy = Dict{String, Any};
+export Enemy
 
-#create, update, read, destroy
+Enemyarray = Array{Enemy, 1}
+export Enemyarray
+
+# create, read, update, destroy
 #= 
-	create: insert!()
-	read: findenemy() && getenemyposition()
-	update: updateenemy()
-	destroy: destroyenemy()
+	createenemy()
+		creates and enemy, either from console input or parameterlist
+	insert!()
+		inserts the enemy such that it appears in both 
+		lookup and enemytable
+	findenemies!()
+		returns a list of all enemies satisfying search criteria
+		these are references to occurrences in the inputted array
+	findall()
+		returns a list of indicies of all enemies satisfying 
+		search criteria
+	findfirst()
+		returns index of first enemy satisfying search criteria
+	findnext()
+		returns index of next occurrence of enemy satisfying 
+		search criteria after, but not including, the given index
+	update!()
+		changes value of given enemy's key according to parameter
+	deletefirst!()
+		removes the first occurrence of given enemy in the given array
+	deleteall!()
+		removes all occurrences of given enemy in given array
+	deletenext!()
+		removes the next occurrence of the given enemy after, but not
+		including, the given index
 =#
 
 function createenemy()
@@ -41,8 +83,7 @@ function createenemy(unique::String, name::String, ac::Int, hp::Int, abl::Array{
 
 end
 
-
-function insert!(lookup::Array{String, 1}, table::Array{Enemy, 1}, e::Enemy)
+function insert!(lookup::Array{String, 1}, table::Enemyarray, e::Enemy)
 	
 	if haskey(e, "unique")
 		push!(lookup, e["unique"]);
@@ -53,11 +94,10 @@ function insert!(lookup::Array{String, 1}, table::Array{Enemy, 1}, e::Enemy)
 	
 end
 
-
 # Marked with ! because it returns a pointer to the array-element
-function findenemies!(arr::Array{Enemy, 1}, key::String, value::Any)
+function findenemies!(arr::Enemyarray, key::String, value::Any)
 
-	tmp::Array{Enemy, 1} = [];
+	tmp::Enemyarray = [];
 	
 	for e in arr
 		if haskey(e, key)
@@ -77,7 +117,22 @@ function findenemies!(arr::Array{Enemy, 1}, key::String, value::Any)
 
 end
 
-function getenemyposition(arr::Array{Enemy, 1}, e)
+# TODO: Implement find functions
+
+function findall(f::Function, arr)
+
+end
+
+function findfirst()
+
+end
+
+function findnext()
+
+end
+
+# Deprecated
+function findin(arr::Enemyarray, e)
 
 	for i in 1:length(arr)
 		if e === arr[i]
@@ -90,13 +145,13 @@ function getenemyposition(arr::Array{Enemy, 1}, e)
 
 end
 
-function updateenemy!(e::Enemy, key::String, value::Any)
+function update!(e::Enemy, key::String, value::Any)
 
 	e[key] = value;
 
 end
 
-function destroyenemy!(arr::Array{Enemy, 1}, e::Enemy)
+function deletefirst!(arr::Enemyarray, e::Enemy)
 
 	pos = getenemyposition(arr, e);
 
@@ -105,5 +160,32 @@ function destroyenemy!(arr::Array{Enemy, 1}, e::Enemy)
 	end
 
 	println("Couldn't delete (obliterate/annihilate) enemy");
+
+end
+
+function deleteall!(arr::Enemyarray, e::Enemy)
+
+end
+
+function deletenext!(arr::Enemyarray, e::Enemy, i::Int)
+
+end
+
+function println(e::Enemy)
+
+	println(e["unique"])
+	println("Name: " * string(e["name"]))
+	println("HP: " * string(e["hp"]) * ", AC: " * string(e["ac"]))
+	println(Vector{Int}(e["abl"]))
+	
+	println("Attacks: ")
+	for att in e["attacks"]
+		println("\t" * att)
+	end
+
+	println("Loot: ")
+	for loot in e["loot"]
+		println("\t" * loot)
+	end
 
 end
