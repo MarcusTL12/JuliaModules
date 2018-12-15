@@ -171,6 +171,7 @@ function deletenext!(arr::Enemyarray, e::Enemy, i::Int)
 
 end
 
+# Perhaps convert to show (see BitStreamLib for more info)
 function println(e::Enemy)
 
 	println(e["unique"])
