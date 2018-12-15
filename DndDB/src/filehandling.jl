@@ -17,12 +17,7 @@ function writefile(fname, content)
 	try 
 		rm(fname);
 		open(fname, "w") do f
-			write(f, "[\n")
-			for c in content
-				write(f, JSON.json(c))
-				write(f, ",\n")
-			end
-			write(f, "]")
+			write(f, JSON.json(content))
 		end
 	catch
 		println("Removal and rewriting of " * fname * " was unsuccessful.");

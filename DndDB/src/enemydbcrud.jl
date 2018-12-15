@@ -1,27 +1,43 @@
 # enemydbcrud.jl (v0.2)
 
-import Base.println
-
 export createenemy
 export insert!
 export update!
 
 export findenemies!
-export findall
-export findfirst
-export findnext
-
 export deleteall!
 export deletefirst!
 export deletenext!
 
-export println
+export printenemy
 
 Enemy = Dict{String, Any};
 export Enemy
 
 Enemyarray = Array{Enemy, 1}
 export Enemyarray
+
+struct Enemy2
+
+	uq::String
+	name::String
+	hp::Int32
+	ac::Int32
+	abl::Vector{Int32}
+	att::Vector{String}
+	loot::Vector{String}
+
+	Enemy2() = new("null", "no name", 0, 0, [0, 0, 0, 0, 0, 0], "no attacks", "no loot")
+
+end
+
+struct Enemy3
+
+	data::Dict{String, Any}
+	Enemy3() = new(Dict())
+	Enemy3(data::Dict{String, Any}) = new(data)
+
+end
 
 # create, read, update, destroy
 #= 
@@ -33,23 +49,11 @@ export Enemyarray
 	findenemies!()
 		returns a list of all enemies satisfying search criteria
 		these are references to occurrences in the inputted array
-	findall()
-		returns a list of indicies of all enemies satisfying 
-		search criteria
-	findfirst()
-		returns index of first enemy satisfying search criteria
-	findnext()
-		returns index of next occurrence of enemy satisfying 
-		search criteria after, but not including, the given index
+	findall(), findfirst(), findnext()
+		use functions implemented for Array{Dict{String, Any}, 1}
 	update!()
 		changes value of given enemy's key according to parameter
-	deletefirst!()
-		removes the first occurrence of given enemy in the given array
-	deleteall!()
-		removes all occurrences of given enemy in given array
-	deletenext!()
-		removes the next occurrence of the given enemy after, but not
-		including, the given index
+	deleteall(), deletefirst(), deletenext()
 =#
 
 function createenemy()
@@ -95,53 +99,17 @@ function insert!(lookup::Array{String, 1}, table::Enemyarray, e::Enemy)
 end
 
 # Marked with ! because it returns a pointer to the array-element
-function findenemies!(arr::Enemyarray, key::String, value::Any)
+function findenemies!(f::Function, arr::Enemyarray)
 
-	tmp::Enemyarray = [];
-	
-	for e in arr
-		if haskey(e, key)
-			if e[key] == value
-				push!(tmp, e);
-			end
-		end
+	inds = findall(f, arr);
+
+	enem::Enemyarray;
+
+	for i in inds
+		push!(enem, arr[i]);
 	end
 
-	if length(tmp) == 0
-		return nothing;
-	elseif length(tmp) == 1
-		return tmp[1];
-	else
-		return tmp;
-	end
-
-end
-
-# TODO: Implement find functions
-
-function findall(f::Function, arr)
-
-end
-
-function findfirst()
-
-end
-
-function findnext()
-
-end
-
-# Deprecated
-function findin(arr::Enemyarray, e)
-
-	for i in 1:length(arr)
-		if e === arr[i]
-			return i;
-		end
-	end
-
-	println("Enemy was not found in array.");
-	return nothing;
+	return enem;
 
 end
 
@@ -151,42 +119,25 @@ function update!(e::Enemy, key::String, value::Any)
 
 end
 
-function deletefirst!(arr::Enemyarray, e::Enemy)
+deletefirst!(f::Function, arr::Enemyarray) = deleteat!(arr, findfirst(f, arr));
+deletenext!(f::Function, arr::Enemyarray, i::Int) = deleteat!(arr, findnext(f, arr, i));
+deleteall!(f::Function, arr::Enemyarray) = deleteat!(arr, findall(f, arr));
 
-	pos = getenemyposition(arr, e);
+function printenemy(e::Enemy)
 
-	if pos != nothing
-		deleteat!(arr, pos);
-	end
-
-	println("Couldn't delete (obliterate/annihilate) enemy");
-
-end
-
-function deleteall!(arr::Enemyarray, e::Enemy)
-
-end
-
-function deletenext!(arr::Enemyarray, e::Enemy, i::Int)
-
-end
-
-# Perhaps convert to show (see BitStreamLib for more info)
-function println(e::Enemy)
-
-	println(e["unique"])
-	println("Name: " * string(e["name"]))
-	println("HP: " * string(e["hp"]) * ", AC: " * string(e["ac"]))
-	println(Vector{Int}(e["abl"]))
+	println(e["unique"]);
+	println("Name: " * string(e["name"]));
+	println("HP: " * string(e["hp"]) * ", AC: " * string(e["ac"]));
+	println(Vector{Int}(e["abl"]));
 	
-	println("Attacks: ")
+	println("Attacks: ");
 	for att in e["attacks"]
-		println("\t" * att)
+		println("\t" * att);
 	end
 
-	println("Loot: ")
+	println("Loot: ");
 	for loot in e["loot"]
-		println("\t" * loot)
+		println("\t" * loot);
 	end
 
 end
