@@ -2,13 +2,13 @@
 
 function putmenu()
 
-    f = open("consolemenu.txt");
-    
-    println(read(f, String));
+	f = open("consolemenu.txt");
 
-    close(f);
+	println(read(f, String));
 
-    choice::Int = 0;
+	close(f);
+
+	choice::Int = 0;
 
 end
 
@@ -17,63 +17,63 @@ end
 # -1 lines reads until "__stop" is given.
 # prompt is shown when cin is called.
 function cin(t::DataType, lines::Int = 1, prompt::String = "")
-    
-    line::String = "";
-    ret::Array{t, 1} = [];
 
-    print(prompt);
-    
-    if lines == -1
+	line::String = "";
+	ret::Array{t, 1} = [];
 
-        println("Send \"__stop\" to end reading.");
-        stop::Bool = false;
+	print(prompt);
 
-        while !stop
-            line = readline();
+	if lines == -1
 
-            if line == "__stop"
-                stop = true;
-                continue;
-            else
-                try
-                    push!(ret, parse(t, line));
-                catch err
-                    if err isa MethodError && t == String
-                        push!(ret, line);
-                    else
-                        println(err);
-                    end
-                end
-            end
-        end
+		println("Send \"__stop\" to end reading.");
+		stop::Bool = false;
 
-    elseif lines == 1
+		while !stop
+			line = readline();
 
-        if t == String
-            return readline();
-        else
-            while true
-                try
-                    return parse(t, readline());
-                catch err
-                    println(err);
-                end
-            end
-        end
+			if line == "__stop"
+				stop = true;
+				continue;
+			else
+				try
+					push!(ret, parse(t, line));
+				catch err
+					if err isa MethodError && t == String
+						push!(ret, line);
+					else
+						println(err);
+					end
+				end
+			end
+		end
 
-    else
-        if t == String
-            for i = 1:lines
-                push!(ret, readline());
-            end
-        else
-            for i = 1:lines
-                push!(ret, cin(t));
-            end
-        end
-                
-    end # end if lines == -1
+	elseif lines == 1
 
-    return ret;
+		if t == String
+			return readline();
+		else
+			while true
+				try
+					return parse(t, readline());
+				catch err
+					println(err);
+				end
+			end
+		end
+
+	else
+		if t == String
+			for i = 1:lines
+				push!(ret, readline());
+			end
+		else
+			for i = 1:lines
+				push!(ret, cin(t));
+			end
+		end
+
+	end # end if lines == -1
+
+	return ret;
 end
 
