@@ -1,3 +1,7 @@
+__precompile__(true)
+
+module Randomshit
+
 
 function l(x::Int, y::Int, n::Int)::Vector{Tuple{Int, Int}}
 	mov::Vector{Tuple{Int, Int}} = [
@@ -23,4 +27,11 @@ function chess(n::Int, k::Int)::Array{Float64}
 
 	# return p[:, :, k + 1]
 	return p[1, 1, :]
+end
+
+testsum() = 0
+
+testsum(a, rest...) = a + testsum(rest...)
+
+
 end

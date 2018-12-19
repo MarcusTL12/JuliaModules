@@ -63,6 +63,7 @@ end
 function run_line(fields::Dict{String, Any}, line::Tuple{String, Vector{String}})
 	funcs = Dict([
 		"print" => print
+		"println" => println
 	])
 	args = [fields[i] for i in line[2]]
 	funcs[line[1]](args...)
