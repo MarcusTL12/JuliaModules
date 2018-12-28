@@ -20,7 +20,8 @@ function chess(n::Int, k::Int)::Array{Float64}
 	for i in 2 : k + 1
 		for x in 1 : n
 			for y in 1 : n
-				p[x, y, i] = (1 / 8) * sum([p[x_, y_, i - 1] for (x_, y_) in l(x, y, n)])
+				p[x, y, i] = (1 / 8) * sum([p[x_, y_, i - 1]
+					for (x_, y_) in l(x, y, n)])
 			end
 		end
 	end
