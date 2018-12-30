@@ -29,6 +29,20 @@ macro <|(f, args...)
 	:(($(esc(f)))(($(esc(args)))...))
 end
 
+export @filter
+macro filter(cond, l)
+	:(filter($(esc(cond)), $(esc(l))))
+end
+
+export @head
+macro head(l)
+	:(first($(esc(l))))
+end
+
+export @tail
+macro tail(l)
+	:(tail($(esc(l))))
+end
 
 function fib()
 	function rec(n::Int)
