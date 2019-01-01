@@ -53,5 +53,6 @@ function fib()
 	memo
 end
 
+include("lazyarray.jl")
 
 end
