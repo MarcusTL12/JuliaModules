@@ -25,6 +25,8 @@ function LazyArray(l::Array{T}) where T
 	r
 end
 
+LazyArray{T, N}(l::Array) where T where N = LazyArray(l)
+
 
 export LazyVector
 LazyVector{T} = LazyArray{T, 1}
@@ -40,26 +42,35 @@ get(n::LazyNode) = n.realised ? n.data :
 
 get(l::LazyArray, indices::Int...) = get(l.data[indices...])
 
+lazyget(l::LazyArray{T}, indices::Int...) where T =
+	LazyNode{T}(() -> (l[indices...]))
+
 
 import Base.getindex
 export getindex
 
 getindex(l::LazyArray, indices::Int...) = get(l, indices...)
 
-function getindex(l::LazyArray{T}, range::UnitRange) where T
+function getindex(l::LazyArray{T}, range::AbstractRange) where T
 	r = LazyVector{T}(length(range))
 	for (i, j) in zip(1 : length(range), range)
-		r.data[i] = LazyNode{T}(() -> (l[j]))
+		r[i] = lazyget(l, j)
 	end
 	r
 end
 
+getindex(l::LazyArray, ::Colon) = l[1:end]
 
-set(n::LazyNode{T}, v::T) where T = (n.data = v; n.realised = true; n.f = nothing)
+
+set(n::LazyNode{T}, v::T) where T =
+	(n.data = v; n.realised = true; n.f = nothing)
 
 set(n::LazyNode, f::Function) = (n.realised = false; n.f = f)
 
-set(l::LazyArray, v, indices::Int...) = set(l.data[indices...], v)
+set(l::LazyArray{T}, v::Union{T, Function}, indices::Int...) where T =
+	set(l.data[indices...], v)
+
+set(l::LazyArray, v::LazyNode, indices::Int...) = (l.data[indices...] = v)
 
 
 import Base.setindex!
@@ -79,6 +90,11 @@ export size
 size(l::LazyArray) = size(l.data)
 
 
+import Base.lastindex
+export lastindex
+lastindex(l::LazyArray) = length(l)
+
+
 import Base.iterate
 export iterate
 
@@ -86,24 +102,12 @@ iterate(iter::LazyArray, state::Int=1) = state > length(iter) ?
 	nothing : (iter[state], state + 1)
 
 
-import Base.string
-export string
-
-string(n::LazyNode) = n.realised ? string(n.data) : "pending"
-
-function string(l::LazyArray)
-	r = "["
-	for i in 1 : length(l.data)
-		r *= string(l.data[i]) * ((i < length(l.data)) ? ", " : "")
-	end
-	r * "]"
-end
-
-
 import Base.show
 export show
 
-show(io::IO, l::LazyArray) = print(io, string(l))
+show(io::IO, n::LazyNode) = print(io, n.realised ? string(n.data) : "pending")
+
+show(io::IO, l::LazyArray) = print(io, string(l.data))
 
 
 import Base.map
@@ -127,3 +131,7 @@ function map!(f::Function, l::LazyArray{T}) where T
 		l.data[i] = LazyNode{T}(() -> f(get(ghost[i])))
 	end
 end
+
+
+export realize!
+realize!(l::LazyArray) = for i in l end
